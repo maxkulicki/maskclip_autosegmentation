@@ -74,11 +74,11 @@ class EncoderDecoder(BaseSegmentor):
         map of the same size as input."""
         x = self.extract_feat(img)
         out = self._decode_head_forward_test(x, img_metas)
-        out = resize(
-            input=out,
-            size=img.shape[2:],
-            mode='bilinear',
-            align_corners=self.align_corners)
+        # out = resize(
+        #     input=out,
+        #     size=img.shape[2:],
+        #     mode='bilinear',
+        #     align_corners=self.align_corners)
         return out
 
     def _decode_head_forward_train(self, x, img_metas, gt_semantic_seg, img=None):
@@ -214,12 +214,12 @@ class EncoderDecoder(BaseSegmentor):
                 size = img.shape[2:]
             else:
                 size = img_meta[0]['ori_shape'][:2]
-            seg_logit = resize(
-                seg_logit,
-                size=size,
-                mode='bilinear',
-                align_corners=self.align_corners,
-                warning=False)
+            # seg_logit = resize(
+            #     seg_logit,
+            #     size=size,
+            #     mode='bilinear',
+            #     align_corners=self.align_corners,
+            #     warning=False)
 
         return seg_logit
 
@@ -246,6 +246,7 @@ class EncoderDecoder(BaseSegmentor):
             seg_logit = self.slide_inference(img, img_meta, rescale)
         else:
             seg_logit = self.whole_inference(img, img_meta, rescale)
+        return seg_logit
         output = F.softmax(seg_logit, dim=1)
         flip = img_meta[0]['flip']
         if flip:
@@ -258,7 +259,7 @@ class EncoderDecoder(BaseSegmentor):
 
         return output
 
-    def simple_test(self, img, img_meta, rescale=True, return_logit=False):
+    def simple_test(self, img, img_meta, rescale=True, return_logit=True):
         """Simple test with single image."""
         seg_logit = self.inference(img, img_meta, rescale)
         if return_logit:

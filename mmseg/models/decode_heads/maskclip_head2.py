@@ -8,6 +8,9 @@ from mmseg.utils import get_root_logger
 from ..builder import HEADS
 from .decode_head import BaseDecodeHead
 
+
+
+
 @HEADS.register_module()
 class MaskClipHead(BaseDecodeHead):
 
@@ -114,8 +117,7 @@ class MaskClipHead(BaseDecodeHead):
                 k = torch.flatten(k, start_dim=2).transpose(-2, -1)
                 v = self.v_proj(x)
                 feat = self.c_proj(v)
-        return feat / feat.norm(dim=1, keepdim=True)
-        #output = self.cls_seg(feat)
+        output = self.cls_seg(feat)
         if not self.training:
             output = self.refine_output(output, k)
 

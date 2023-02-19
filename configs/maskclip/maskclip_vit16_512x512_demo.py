@@ -7,6 +7,7 @@ model = dict(
         num_classes=0,
         text_categories=0, 
         text_channels=512,
+        #text_embeddings_path='../pretrain/context_ViT16_clip_text.pth',
         text_embeddings_path='../pretrain/demo_ViT16_clip_text.pth',
         visual_projs_path='../pretrain/ViT16_clip_weights.pth',
     ),
