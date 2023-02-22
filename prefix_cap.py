@@ -223,9 +223,17 @@ def caption_from_CLIP(embedding, model, tokenizer, beam_search=True):
     return caption
 
 if __name__ == '__main__':
+    img_path = 'demo/bear.jpg'
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    model_path = 'pretrain/prefix_cap_model.pt'
+
+    #initialize clip
+    clip_model, preprocess = clip.load("ViT-B/16", device=device)
+
+    image = preprocess(PIL.Image.open(img_path)).unsqueeze(0).to(device)
+    image_embedding = clip_model.encode_image(image).to(device, dtype=torch.float32)
+
+    model_path = 'pretrain/conceptual_weights_prefix_cap.pt'
     model, tokenizer = init_clip_cap(model_path, device)
-    embedding = torch.rand(1, 512)
-    caption = caption_from_CLIP(embedding, model, tokenizer)
+    embedding = torch.rand(1, 512).to(device)
+    caption = caption_from_CLIP(image_embedding, model, tokenizer)
     print(caption)
